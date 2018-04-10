@@ -24,7 +24,7 @@ public class TokenizerImpl implements Tokenizer {
 	@Override
 	public Iterable<Token> tokenize(String input) {
 		input = input.replaceAll("\\s", "");
-		LOG.debug("Expression before tokenization:{}", input);
+		LOG.debug("Expression before tokenization: {}", input);
 		final String[] tokens = input.split(regex);
 		final Iterable<String> unclassified = Arrays.asList(tokens).stream().filter(s -> !s.equals(""))
 				.collect(Collectors.toList());

@@ -33,4 +33,53 @@ public class ExprCalcMainIT {
 				};
 		assertArrayEquals(expectedResults, actualResults);
 	}
+
+	@Test
+	public void justValue() {
+		final String[] expressions = new String[] {
+				"100"
+		};
+		final Object[] actualResults = ExprCalcMain.evaluate(expressions);
+		final Object[] expectedResults = new Object[] {
+				BigInteger.valueOf(100)
+		};
+		assertArrayEquals(expectedResults, actualResults);
+	}
+
+	@Test
+	public void divizionByZero() {
+		final String[] expressions = new String[] {
+				"div(100,0)"
+		};
+		final Object[] actualResults = ExprCalcMain.evaluate(expressions);
+		final Object[] expectedResults = new Object[] {
+				"BigInteger divide by zero"
+		};
+		assertArrayEquals(expectedResults, actualResults);
+	}
+
+	@Test
+	public void badInput() {
+		final String[] expressions = new String[] {
+				"div(1000)"
+		};
+		final Object[] actualResults = ExprCalcMain.evaluate(expressions);
+		final Object[] expectedResults = new Object[] {
+				"Unable to create BinaryOperatorNode, 2 args required!"
+		};
+		assertArrayEquals(expectedResults, actualResults);
+	}
+
+	@Test
+	public void multiplicationOf2Integers_noOverflow() {
+		final String[] expressions = new String[] {
+				"mult(" + Integer.MAX_VALUE + "," + Integer.MAX_VALUE + ")"
+		};
+		final Object[] actualResults = ExprCalcMain.evaluate(expressions);
+		final Object[] expectedResults = new Object[] {
+				new BigInteger("4611686014132420609")
+		};
+		assertArrayEquals(expectedResults, actualResults);
+	}
+
 }

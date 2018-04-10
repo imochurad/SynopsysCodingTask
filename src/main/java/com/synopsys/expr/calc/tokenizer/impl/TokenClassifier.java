@@ -22,7 +22,7 @@ public class TokenClassifier {
 		return new Token(tokenType, unclassified);
 	}
 
-	class IllegalTokenException extends RuntimeException {
+	private class IllegalTokenException extends RuntimeException {
 
 		private static final long serialVersionUID = 1L;
 

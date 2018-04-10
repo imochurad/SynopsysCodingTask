@@ -3,6 +3,8 @@ package com.synopsys.expr.calc.tree.nodes;
 import java.math.BigInteger;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
 public class ValueNode extends OperandNode {
 
 	private final BigInteger value;
@@ -21,8 +23,14 @@ public class ValueNode extends OperandNode {
 	}
 
 	@Override
-	public BigInteger compute(final Map<String, BigInteger> varValues) {
+	protected BigInteger doCompute(final Map<String, BigInteger> varValues) {
 		return getValue();
+	}
+
+	@Override
+	protected void validateState(final Map<String, BigInteger> varValues) {
+		Preconditions.checkState(getChildren().isEmpty(), "Value node should not have children!");
+		Preconditions.checkState(value != null, "Value node couldn't be empty!");
 	}
 
 }

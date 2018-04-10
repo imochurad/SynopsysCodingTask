@@ -2,6 +2,7 @@ package com.synopsys.expr.calc.tree;
 
 import java.math.BigInteger;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.synopsys.expr.calc.tokenizer.Token;
 import com.synopsys.expr.calc.tree.nodes.AddNode;
@@ -9,6 +10,7 @@ import com.synopsys.expr.calc.tree.nodes.BinaryOperatorNode;
 import com.synopsys.expr.calc.tree.nodes.DivNode;
 import com.synopsys.expr.calc.tree.nodes.LetNode;
 import com.synopsys.expr.calc.tree.nodes.MultNode;
+import com.synopsys.expr.calc.tree.nodes.OperandNode;
 import com.synopsys.expr.calc.tree.nodes.SubNode;
 import com.synopsys.expr.calc.tree.nodes.ValueNode;
 import com.synopsys.expr.calc.tree.nodes.VariableNode;
@@ -29,14 +31,27 @@ public class TreeBuilder {
 	private TreeNode build(final Iterator<Token> iter) {
 		final TreeNode node = getNodeByToken(iter.next());
 		if (node instanceof BinaryOperatorNode) {
-			node.getChildren().add(build(iter));
-			node.getChildren().add(build(iter));
+			try {
+				node.getChildren().add(build(iter));
+				node.getChildren().add(build(iter));
+				return node;
+			} catch (final NoSuchElementException e) {
+				throw new IllegalStateException("Unable to create BinaryOperatorNode, 2 args required!");
+			}
 		} else if (node instanceof LetNode) {
-			node.getChildren().add(build(iter));
-			node.getChildren().add(build(iter));
-			node.getChildren().add(build(iter));
+			try {
+				node.getChildren().add(build(iter));
+				node.getChildren().add(build(iter));
+				node.getChildren().add(build(iter));
+				return node;
+			} catch (final NoSuchElementException e) {
+				throw new IllegalStateException("Unable to create LetNode, 3 args required!");
+			}
+		} else if (node instanceof OperandNode) {
+			return node;
+		} else {
+			throw new IllegalStateException("Unknown TreeNode type detected, do not know how to handle");
 		}
-		return node;
 	}
 
 	private TreeNode getNodeByToken(final Token token) {
